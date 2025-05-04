@@ -32,14 +32,16 @@ public class JwtValidFilter extends OncePerRequestFilter {
     ObjectMapper mapper = new ObjectMapper();
 
     if (accessToken == null || !accessToken.startsWith("Bearer ")) {
-      JwtUtils.verifyFailureHandler(response, mapper, "인증정보를 확인하세요(1)");
+      JwtUtils.verifyFailureHandler(
+          response, mapper, "인증정보를 확인하세요(1)", HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
 
     accessToken = accessToken.replace("Bearer ", "");
 
     if (!JwtUtils.verifyAccessToken(accessToken)) {
-      JwtUtils.verifyFailureHandler(response, mapper, "인증정보를 확인하세요(2)");
+      JwtUtils.verifyFailureHandler(
+          response, mapper, "인증정보를 확인하세요(2)", HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
 

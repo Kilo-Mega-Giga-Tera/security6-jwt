@@ -20,6 +20,7 @@ public class SecurityAuthenticationEntryPoint implements AuthenticationEntryPoin
       HttpServletResponse response,
       AuthenticationException authException)
       throws IOException {
-    JwtUtils.verifyFailureHandler(response, new ObjectMapper(), "인증정보를 확인하세요(3)");
+    JwtUtils.verifyFailureHandler(
+        response, new ObjectMapper(), "인증정보를 확인하세요(3)", HttpServletResponse.SC_UNAUTHORIZED);
   }
 }

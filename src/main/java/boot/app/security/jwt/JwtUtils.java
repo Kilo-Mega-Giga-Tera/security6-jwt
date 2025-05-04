@@ -109,10 +109,10 @@ public class JwtUtils {
   }
 
   public static void verifyFailureHandler(
-      HttpServletResponse response, ObjectMapper mapper, String message) throws IOException {
+      HttpServletResponse response, ObjectMapper mapper, String message, int httpStatus) throws IOException {
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
-    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    response.setStatus(httpStatus);
 
     ResultMapDto<?> errorResponse = new ResultMapDto<>(Map.of("reason", message), "error");
     response.getWriter().write(mapper.writeValueAsString(errorResponse));

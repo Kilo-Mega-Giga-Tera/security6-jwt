@@ -19,6 +19,7 @@ public class SecurityAccessDeniedHandler implements AccessDeniedHandler {
       HttpServletResponse response,
       AccessDeniedException accessDeniedException)
       throws IOException {
-    JwtUtils.verifyFailureHandler(response, new ObjectMapper(), "권한이 불충분 합니다");
+    JwtUtils.verifyFailureHandler(
+        response, new ObjectMapper(), "권한이 불충분 합니다", HttpServletResponse.SC_FORBIDDEN);
   }
 }
