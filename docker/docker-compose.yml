@@ -13,7 +13,11 @@ services:
 
   redis:
     container_name: redis
-    image: redis-custom:1.0.0
+    build:
+      context: redis
+      dockerfile: Dockerfile
+      tags:
+        - redis-custom:1.0.0
     ports:
       - "6379:6379"
     networks:
