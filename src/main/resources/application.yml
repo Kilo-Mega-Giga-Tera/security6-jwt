@@ -1,0 +1,26 @@
+server:
+  port: 9999
+
+spring:
+  data:
+    redis:
+      url: redis://${password}@localhost:6379
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: ${password}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+      log-format: "%(sql)"
+
+jwt:
+  password: ${password}
