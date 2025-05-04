@@ -9,7 +9,7 @@ public class ResultMapDto<T> {
   private T result;
   private String message;
 
-  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @JsonInclude(JsonInclude.Include.NON_DEFAULT)
   private int size;
 
   public ResultMapDto(T result, String message) {

@@ -56,6 +56,7 @@ public class JwtValidFilter extends OncePerRequestFilter {
 
   protected boolean shouldNotFilter(HttpServletRequest request) {
     return request.getRequestURI().contains("/api/login")
-        || request.getRequestURI().contains("/api/refresh");
+        || request.getRequestURI().contains("/api/refresh")
+        || request.getRequestURI().contains("/api/register");
   }
 }
