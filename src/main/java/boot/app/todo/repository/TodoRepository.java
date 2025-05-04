@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 
-  List<Todo> findByDelYn(String delYn);
+  List<Todo> findByCreatedByAndDelYn(String userId, String delYn);
+
+  Todo findBySeq(Long seq);
 }
