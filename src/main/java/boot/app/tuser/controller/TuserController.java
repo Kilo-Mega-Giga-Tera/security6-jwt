@@ -62,7 +62,8 @@ public class TuserController {
   }
 
   @PostMapping("/refresh")
-  public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response)
+      throws Exception {
 
     Cookie[] cookies = request.getCookies();
     String refreshToken = null;
@@ -97,9 +98,22 @@ public class TuserController {
     return ResponseEntity.ok().body(new ResultMapDto<>(tokenResponseDto, "success"));
   }
 
+  @PostMapping("/logout")
+  public ResponseEntity<?> logout(HttpServletResponse response) {
+    Cookie cookie = new Cookie("refresh_token", null);
+    cookie.setPath("/");
+    cookie.setMaxAge(0);
+    cookie.setHttpOnly(true);
+    cookie.setSecure(false);
+    response.addCookie(cookie);
+
+    return ResponseEntity.ok().body(new ResultMapDto<>(Map.of("message", "로그아웃 완료"), "success"));
+  }
+
   private static Cookie setRefreshTokenCookie(String refreshToken) {
     Cookie cookie = new Cookie("refresh_token", refreshToken);
-    cookie.setPath("/api/refresh");
+    cookie.setPath("/");
+    cookie.setMaxAge(60 * 60 * 24 * 7);
     cookie.setHttpOnly(true);
     cookie.setSecure(false);
     return cookie;
