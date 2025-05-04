@@ -36,7 +36,7 @@ public class TodoService {
   }
 
   public List<TodoResponseDto> getTodo() {
-    List<Todo> todoList = todoRepository.findByCreatedByAndDelYn(SecurityUtils.getUserId(), "N");
+    List<Todo> todoList = todoRepository.findByCreatedByAndDelYnOrderByUpdatedAtDesc(SecurityUtils.getUserId(), "N");
 
     return todoList.stream()
         .map(
