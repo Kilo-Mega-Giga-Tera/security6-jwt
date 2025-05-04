@@ -41,7 +41,7 @@ public class TuserController {
 
   @PostMapping("/login")
   public ResponseEntity<?> login(
-      @RequestBody TuserRequestDto tuserRequestDto, HttpServletResponse response) {
+      @RequestBody TuserRequestDto tuserRequestDto, HttpServletResponse response) throws Exception {
 
     Authentication authentication =
         authenticationManager.authenticate(
@@ -62,7 +62,7 @@ public class TuserController {
   }
 
   @PostMapping("/refresh")
-  public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response) {
+  public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     Cookie[] cookies = request.getCookies();
     String refreshToken = null;

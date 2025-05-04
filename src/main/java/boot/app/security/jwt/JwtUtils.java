@@ -1,5 +1,6 @@
 package boot.app.security.jwt;
 
+import boot.app.common.aes.AesUtils;
 import boot.app.tuser.model.dto.response.ResultMapDto;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -32,9 +33,9 @@ public class JwtUtils {
     JwtUtils.redisTemplate = redisTemplate;
   }
 
-  public static String generateAccessToken(String username, List<String> roles) {
+  public static String generateAccessToken(String username, List<String> roles) throws Exception {
     return JWT.create()
-        .withIssuer(username)
+        .withIssuer(AesUtils.encrypt(username))
         .withClaim("roles", roles.getFirst())
         .withClaim("type", "access")
         .withIssuedAt(new Date())
@@ -42,10 +43,10 @@ public class JwtUtils {
         .sign(Algorithm.HMAC256(password));
   }
 
-  public static String generateRefreshToken(String username) {
+  public static String generateRefreshToken(String username) throws Exception {
     String token =
         JWT.create()
-            .withIssuer(username)
+            .withIssuer(AesUtils.encrypt(username))
             .withClaim("type", "refresh")
             .withIssuedAt(new Date())
             .withExpiresAt(new Date().toInstant().plusSeconds(REFRESH_TOKEN_TIME))
@@ -75,7 +76,7 @@ public class JwtUtils {
         return false;
       }
 
-      String redisTokenKey = "refresh_token:" + decodedJWT.getIssuer();
+      String redisTokenKey = "refresh_token:" + AesUtils.decrypt(decodedJWT.getIssuer());
       String tokenValue = redisTemplate.opsForValue().get(redisTokenKey);
 
       return Objects.requireNonNull(tokenValue).equals(token);
@@ -89,7 +90,7 @@ public class JwtUtils {
     try {
       JWTVerifier verify = JWT.require(Algorithm.HMAC256(password)).build();
       DecodedJWT verifyJwt = verify.verify(token);
-      return verifyJwt.getIssuer();
+      return AesUtils.decrypt(verifyJwt.getIssuer());
     } catch (Exception e) {
       log.error("extractUserId - {}", e.getMessage());
       return "";
