@@ -29,6 +29,7 @@ public class TodoService {
     Todo savedTodo = todoRepository.save(todo);
 
     return TodoResponseDto.builder()
+        .seq(savedTodo.getSeq())
         .title(savedTodo.getTitle())
         .createdAt(savedTodo.getCreatedAt())
         .createdBy(savedTodo.getCreatedBy())
@@ -36,7 +37,8 @@ public class TodoService {
   }
 
   public List<TodoResponseDto> getTodo() {
-    List<Todo> todoList = todoRepository.findByCreatedByAndDelYnOrderByUpdatedAtDesc(SecurityUtils.getUserId(), "N");
+    List<Todo> todoList =
+        todoRepository.findByCreatedByAndDelYnOrderByUpdatedAtDesc(SecurityUtils.getUserId(), "N");
 
     return todoList.stream()
         .map(
@@ -57,13 +59,11 @@ public class TodoService {
     Todo todo = todoRepository.findBySeq(seq);
     todo.delete();
 
-    return new TodoResponseDto(
-        todo.getSeq(),
-        todo.getTitle(),
-        todo.getContent(),
-        todo.getCreatedAt(),
-        todo.getUpdatedAt(),
-        todo.getCreatedBy(),
-        todo.getUpdatedBy());
+    return TodoResponseDto.builder()
+        .seq(todo.getSeq())
+        .title(todo.getTitle())
+        .updatedAt(todo.getUpdatedAt())
+        .updatedBy(todo.getUpdatedBy())
+        .build();
   }
 }
