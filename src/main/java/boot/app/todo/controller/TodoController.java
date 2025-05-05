@@ -30,4 +30,10 @@ public class TodoController {
     TodoResponseDto todoResponseDto = todoService.saveTodo(todoRequestDto);
     return ResponseEntity.ok().body(new ResultMapDto<>(todoResponseDto, "success"));
   }
+
+  @DeleteMapping("/todo/{seq}")
+  public ResponseEntity<?> deleteTodo(@PathVariable Long seq) {
+    TodoResponseDto todoResponseDto = todoService.todoResponseDto(seq);
+    return ResponseEntity.ok().body(new ResultMapDto<>(todoResponseDto, "success"));
+  }
 }
