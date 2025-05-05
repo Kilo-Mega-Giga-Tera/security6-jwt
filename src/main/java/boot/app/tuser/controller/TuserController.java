@@ -1,8 +1,8 @@
 package boot.app.tuser.controller;
 
+import boot.app.common.exception.ApiException;
 import boot.app.security.jwt.JwtUtils;
 import boot.app.tuser.model.dto.request.TuserRequestDto;
-import boot.app.tuser.model.dto.response.ResultMapDto;
 import boot.app.tuser.model.dto.response.TokenResponseDto;
 import boot.app.tuser.model.dto.response.TuserResponseDto;
 import boot.app.tuser.service.TuserService;
@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,13 +32,12 @@ public class TuserController {
   private final AuthenticationManager authenticationManager;
 
   @PostMapping("/register")
-  public ResponseEntity<?> register(@RequestBody TuserRequestDto tuserRequestDto) {
-    TuserResponseDto tuserResponseDto = tuserService.register(tuserRequestDto);
-    return ResponseEntity.ok().body(new ResultMapDto<>(tuserResponseDto, "success"));
+  public TuserResponseDto register(@RequestBody TuserRequestDto tuserRequestDto) {
+    return tuserService.register(tuserRequestDto);
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(
+  public TokenResponseDto login(
       @RequestBody TuserRequestDto tuserRequestDto, HttpServletResponse response) throws Exception {
 
     Authentication authentication =
@@ -56,21 +53,19 @@ public class TuserController {
     String refreshToken = JwtUtils.generateRefreshToken(name);
 
     response.addCookie(setRefreshTokenCookie(refreshToken));
-    TokenResponseDto tokenResponseDto = new TokenResponseDto(accessToken);
 
-    return new ResponseEntity<>(new ResultMapDto<>(tokenResponseDto, "success"), HttpStatus.OK);
+    return new TokenResponseDto(accessToken);
   }
 
   @PostMapping("/refresh")
-  public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response)
+  public TokenResponseDto refresh(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
 
     Cookie[] cookies = request.getCookies();
     String refreshToken = null;
 
     if (cookies == null) {
-      return new ResponseEntity<>(
-          new ResultMapDto<>(Map.of("reason", "토큰갱신에 실패했습니다(1)"), "error"), HttpStatus.BAD_REQUEST);
+      throw new ApiException("토큰갱신에 실패했습니다(1)");
     }
 
     for (Cookie cookie : cookies) {
@@ -80,8 +75,7 @@ public class TuserController {
     }
 
     if (!JwtUtils.verifyRefreshToken(refreshToken)) {
-      return new ResponseEntity<>(
-          new ResultMapDto<>(Map.of("reason", "토큰갱신에 실패했습니다(2)"), "error"), HttpStatus.BAD_REQUEST);
+      throw new ApiException("토큰갱신에 실패했습니다(2)");
     }
 
     String userId = JwtUtils.extractUserId(refreshToken);
@@ -95,11 +89,11 @@ public class TuserController {
     TokenResponseDto tokenResponseDto = new TokenResponseDto(accessToken);
     response.addCookie(setRefreshTokenCookie(newRefreshToken));
 
-    return ResponseEntity.ok().body(new ResultMapDto<>(tokenResponseDto, "success"));
+    return tokenResponseDto;
   }
 
   @PostMapping("/logout")
-  public ResponseEntity<?> logout(HttpServletResponse response) {
+  public Map<String, String> logout(HttpServletResponse response) {
     Cookie cookie = new Cookie("refresh_token", null);
     cookie.setPath("/");
     cookie.setMaxAge(0);
@@ -107,7 +101,7 @@ public class TuserController {
     cookie.setSecure(false);
     response.addCookie(cookie);
 
-    return ResponseEntity.ok().body(new ResultMapDto<>(Map.of("message", "로그아웃 완료"), "success"));
+    return Map.of("message", "로그아웃 완료");
   }
 
   private static Cookie setRefreshTokenCookie(String refreshToken) {
