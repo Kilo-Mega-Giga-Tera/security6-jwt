@@ -9,9 +9,7 @@ public class TuserRequestDto {
   @NotNull(message = "userId은(는) 필수 값입니다.")
   private String userId;
 
-  @NotNull(message = "password은(는) 필수 값입니다.")
   private String password;
 
-  @NotNull(message = "userName은(는) 필수 값입니다.")
   private String userName;
 }

@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TuserRepository extends JpaRepository<Tuser, Long> {
+
   Tuser findByUserIdAndDelYn(String userId, String delYn);
 }

@@ -3,9 +3,8 @@ package boot.app.todo.controller;
 import boot.app.todo.model.dto.request.TodoRequestDto;
 import boot.app.todo.model.dto.response.TodoResponseDto;
 import boot.app.todo.service.TodoService;
-import java.util.List;
-
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
