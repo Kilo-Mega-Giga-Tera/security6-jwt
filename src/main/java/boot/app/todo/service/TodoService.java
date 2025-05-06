@@ -66,4 +66,18 @@ public class TodoService {
         .updatedBy(todo.getUpdatedBy())
         .build();
   }
+
+  @Transactional
+  public TodoResponseDto updateTodo(Long seq, TodoRequestDto todoRequestDto) {
+    Todo todo = todoRepository.findBySeq(seq);
+    todo.todoUpdate(todoRequestDto.getTitle(), todoRequestDto.getContent());
+
+    return TodoResponseDto.builder()
+        .seq(todo.getSeq())
+        .title(todo.getTitle())
+        .content(todo.getContent())
+        .updatedAt(todo.getUpdatedAt())
+        .updatedBy(todo.getUpdatedBy())
+        .build();
+  }
 }

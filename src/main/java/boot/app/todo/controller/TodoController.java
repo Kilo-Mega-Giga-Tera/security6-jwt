@@ -4,6 +4,8 @@ import boot.app.todo.model.dto.request.TodoRequestDto;
 import boot.app.todo.model.dto.response.TodoResponseDto;
 import boot.app.todo.service.TodoService;
 import java.util.List;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -29,5 +31,10 @@ public class TodoController {
   @DeleteMapping("/todo/{seq}")
   public TodoResponseDto deleteTodo(@PathVariable Long seq) {
     return todoService.todoResponseDto(seq);
+  }
+
+  @PutMapping("/todo/{seq}")
+  public TodoResponseDto updateTodo(@PathVariable Long seq, @Valid @RequestBody TodoRequestDto todoRequestDto) {
+    return todoService.updateTodo(seq, todoRequestDto);
   }
 }
