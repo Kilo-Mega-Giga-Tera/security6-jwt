@@ -109,7 +109,8 @@ public class JwtUtils {
   }
 
   public static void verifyFailureHandler(
-      HttpServletResponse response, ObjectMapper mapper, String message, int httpStatus) throws IOException {
+      HttpServletResponse response, ObjectMapper mapper, String message, int httpStatus)
+      throws IOException {
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
     response.setStatus(httpStatus);

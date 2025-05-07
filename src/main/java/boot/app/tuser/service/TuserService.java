@@ -1,15 +1,19 @@
 package boot.app.tuser.service;
 
+import boot.app.common.exception.ApiException;
+import boot.app.security.SecurityUtils;
 import boot.app.tuser.model.dto.request.TuserRequestDto;
 import boot.app.tuser.model.dto.response.TuserResponseDto;
 import boot.app.tuser.model.entity.Tuser;
 import boot.app.tuser.model.enums.Roles;
 import boot.app.tuser.repository.TuserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -34,6 +38,19 @@ public class TuserService {
         .userName(savedUser.getUserName())
         .createdAt(savedUser.getCreatedAt())
         .build();
+  }
+
+  public TuserResponseDto unRegister(TuserRequestDto tuserRequestDto) {
+    String tokenUserId = SecurityUtils.getUserId();
+
+    if (!tokenUserId.equals(tuserRequestDto.getUserId())) {
+      throw new ApiException("사용자가 없습니다");
+    }
+
+    Tuser tuser = tuserRepository.findByUserIdAndDelYn(tokenUserId, "N");
+    tuser.delete();
+
+    return TuserResponseDto.builder().userId(tokenUserId).build();
   }
 
   public TuserResponseDto findByUserId(String userId) {

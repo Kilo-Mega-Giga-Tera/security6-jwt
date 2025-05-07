@@ -21,4 +21,9 @@ public class Todo extends BaseEntity {
 
   @Column(name = "CONTENT", nullable = false)
   private String content;
+
+  public void todoUpdate(String title, String content) {
+    this.title = title;
+    this.content = content == null ? "" : content;
+  }
 }
