@@ -5,9 +5,10 @@ import boot.app.todo.model.dto.request.TodoRequestDto;
 import boot.app.todo.model.dto.response.TodoResponseDto;
 import boot.app.todo.model.entity.Todo;
 import boot.app.todo.repository.TodoRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,22 +37,20 @@ public class TodoService {
         .build();
   }
 
-  public List<TodoResponseDto> getTodo() {
-    List<Todo> todoList =
-        todoRepository.findByCreatedByAndDelYnOrderByUpdatedAtDesc(SecurityUtils.getUserId(), "N");
+  public Page<TodoResponseDto> getTodo(Pageable pageable) {
+    Page<Todo> todoList =
+        todoRepository.findByCreatedByAndDelYnOrderByUpdatedAtDesc(SecurityUtils.getUserId(), "N", pageable);
 
-    return todoList.stream()
-        .map(
-            t ->
-                TodoResponseDto.builder()
+
+    return todoList.map(t ->
+            TodoResponseDto.builder()
                     .seq(t.getSeq())
                     .title(t.getTitle())
                     .createdBy(t.getCreatedBy())
                     .createdAt(t.getCreatedAt())
                     .updatedBy(t.getUpdatedBy())
                     .updatedAt(t.getUpdatedAt())
-                    .build())
-        .toList();
+                    .build());
   }
 
   @Transactional

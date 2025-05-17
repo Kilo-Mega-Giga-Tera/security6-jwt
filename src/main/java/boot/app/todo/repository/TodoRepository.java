@@ -1,14 +1,16 @@
 package boot.app.todo.repository;
 
 import boot.app.todo.model.entity.Todo;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 
-  List<Todo> findByCreatedByAndDelYnOrderByUpdatedAtDesc(String userId, String delYn);
+  Page<Todo> findByCreatedByAndDelYnOrderByUpdatedAtDesc(
+      String userId, String delYn, Pageable pageable);
 
   Todo findBySeq(Long seq);
 }
