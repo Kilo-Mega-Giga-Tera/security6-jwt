@@ -4,9 +4,12 @@ import boot.app.todo.model.dto.request.TodoRequestDto;
 import boot.app.todo.model.dto.response.TodoResponseDto;
 import boot.app.todo.service.TodoService;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,8 +21,9 @@ public class TodoController {
   private final TodoService todoService;
 
   @GetMapping("/todo")
-  public List<TodoResponseDto> getTodo() {
-    return todoService.getTodo();
+  public Page<TodoResponseDto> getTodo(
+      @PageableDefault(sort = "updatedAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    return todoService.getTodo(pageable);
   }
 
   @PostMapping("/todo")
@@ -33,7 +37,8 @@ public class TodoController {
   }
 
   @PutMapping("/todo/{seq}")
-  public TodoResponseDto updateTodo(@PathVariable Long seq, @Valid @RequestBody TodoRequestDto todoRequestDto) {
+  public TodoResponseDto updateTodo(
+      @PathVariable Long seq, @Valid @RequestBody TodoRequestDto todoRequestDto) {
     return todoService.updateTodo(seq, todoRequestDto);
   }
 }
