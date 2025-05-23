@@ -1,7 +1,8 @@
 package boot.app.tuser.model.entity;
 
-import boot.app.tuser.model.enums.Roles;
-import boot.app.tuser.repository.TuserRepository;
+import boot.app.domain.tuser.Tuser;
+import boot.app.domain.tuser.Roles;
+import boot.app.domain.tuser.TuserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
