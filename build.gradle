@@ -40,11 +40,7 @@ dependencies {
 
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.11.0'
     implementation 'com.auth0:java-jwt:4.5.0'
-
-    implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
-    annotationProcessor 'com.querydsl:querydsl-apt:5.1.0:jakarta'
-    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+    annotationProcessor 'io.github.openfeign.querydsl:querydsl-jpa-spring:6.11'
 }
 
 test {
